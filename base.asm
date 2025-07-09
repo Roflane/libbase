@@ -3,23 +3,24 @@ include 'win64a.inc'
 
 section '.edata' export readable
 export 'base.dll', \
-    FastZeroMemory, 'FastZeroMemory', RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16'
+    FastZeroMemory, 'FastZeroMemory', RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16', RandomByte, 'RandomByte', RandomSByte, 'RandomSByte'
 
 
 section '.code' code readable executable
 proc FastZeroMemory
-    xor bl, bl
+    xor cl, cl
     mov rdi, rcx
     mov rcx, rdx
     rep stosb
     ret
 endp
 
+macro negr rg { neg rg }
+
+
 proc RandomInt64
-.check:
     cmp rdx, rcx
     jg .impl
-.fail:
     xor rax, rax
     ret
 .impl:
@@ -36,40 +37,80 @@ proc RandomInt64
 endp
 
 proc RandomInt32
-.check:
     cmp edx, ecx
     jg .impl
-.fail:
     xor eax, eax
     ret
 .impl:
-    rdrand ebx
+    rdrand eax
     mov esi, ecx
-    mov ebx, edx
-    sub ebx, esi
-    inc ebx
+    mov edi, edx
+    sub edi, esi
+    inc edi
     xor edx, edx
-    div ebx
+    div edi
     add edx, ecx
     mov eax, edx
     ret
 endp
 
 proc RandomInt16
-.check:
     cmp dx, cx
-    jb .fail
-.impl:
-    mov ax, dx
-    sub ax, cx
-    inc ax
-    rdrand bx
-    xor dx, dx
-    div ax
-    add dx, cx
-    mov ax, dx
-    ret
-.fail:
+    jg .gen
     xor ax, ax
     ret
+.gen:
+    rdrand ax
+    test ax, ax
+    jns .pos
+    negr ax
+.pos:
+    mov bx, dx
+    sub bx, cx
+    inc bx
+    xor dx, dx
+    div bx
+    mov ax, cx
+    add ax, dx
+    ret
+endp
+
+proc RandomByte
+    cmp dx, cx
+    jg .impl
+    xor ax, ax
+    ret
+.impl:
+    rdrand ax
+    movzx eax, ax
+    mov bx, dx
+    sub bx, cx
+    inc bx
+    xor dx, dx
+    div bx
+    mov ax, cx
+    add ax, dx
+    ret
+endp
+
+proc RandomSByte
+    cmp dx, cx
+    jg .impl
+    xor ax, ax
+    ret
+.impl:
+    rdrand ax
+    movsx eax, ax
+    mov bx, dx
+    sub bx, cx
+    inc bx
+    xor dx, dx
+    div bx
+    mov ax, cx
+    add ax, dx
+    ret
+endp
+
+proc RandomFloat
+
 endp
