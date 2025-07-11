@@ -15,8 +15,6 @@ proc FastZeroMemory
     ret
 endp
 
-macro negr rg { neg rg }
-
 
 proc RandomInt64
     cmp rdx, rcx
@@ -63,7 +61,7 @@ proc RandomInt16
     rdrand ax
     test ax, ax
     jns .pos
-    negr ax
+    neg ax
 .pos:
     mov bx, dx
     sub bx, cx
@@ -109,8 +107,4 @@ proc RandomSByte
     mov ax, cx
     add ax, dx
     ret
-endp
-
-proc RandomFloat
-
 endp
