@@ -1,10 +1,17 @@
 format PE64 DLL
-include 'win64a.inc'
+include 'win64ax.inc'
 
 section '.edata' export readable
 export 'base.dll', \
-    FastZeroMemory, 'FastZeroMemory', RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16', RandomByte, 'RandomByte', RandomSByte, 'RandomSByte'
+    FastZeroMemory, 'FastZeroMemory',\
+    RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16', RandomByte, 'RandomByte', RandomSByte, 'RandomSByte', \
+    RandomDouble, 'RandomDouble', RandomSingle, 'RandomSingle'
 
+section '.data' data readable
+    one64 dq 1.0
+    one32 dd 1.0
+    _x64value dq 1.8446744073709552e30
+    _x32value dd 1000000000
 
 section '.code' code readable executable
 proc FastZeroMemory
@@ -106,5 +113,57 @@ proc RandomSByte
     div bx
     mov ax, cx
     add ax, dx
+    ret
+endp
+
+proc RandomDouble
+.begin:
+    rdrand r15
+    test r15, r15
+    cmp r15, 0
+    js .negate
+    jmp .impl
+.negate:
+    neg r15
+.impl:
+    cvtsi2sd xmm2, r15
+    cvtsi2sd xmm3, [_x64value]
+    divsd xmm2, xmm3
+    movq rax, xmm2
+    test rax, rax
+    cmp rax, [one64]
+    jge .begin
+    movsd xmm7, xmm0
+    movsd xmm6, xmm1
+    subsd xmm6, xmm7
+    mulsd xmm2, xmm6
+    addsd xmm2, xmm7
+    movsd xmm0, xmm2
+    ret
+endp
+
+proc RandomSingle
+.begin:
+    rdrand esi
+    test esi, esi
+    cmp esi, 0
+    js .negate
+    jmp .impl
+.negate:
+    neg esi
+.impl:
+    cvtsi2ss xmm2, esi
+    cvtsi2ss xmm3, [_x32value]
+    divss xmm2, xmm3
+    movd eax, xmm2
+    test eax, eax
+    cmp eax, [one32]
+    jge .begin
+    movss xmm7, xmm0
+    movss xmm6, xmm1
+    subss xmm6, xmm7
+    mulss xmm2, xmm6
+    addss xmm2, xmm7
+    movss xmm0, xmm2
     ret
 endp
