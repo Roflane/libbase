@@ -1,5 +1,5 @@
 ### libbase
-This dll contains very handy functions. In addition, these functions can be easily imported from C# and C/C++.
+This dll contains very handy functions made for Windows X64 systems. In addition, these functions can be easily imported from C# and C/C++.
 Singatures initially designed for C#.
 
 ## Note
