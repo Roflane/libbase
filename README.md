@@ -1,5 +1,5 @@
 ### libbase
-This lib contains very handy functions. In addition, these functions can be easily imported from C#.
+This dll contains very handy functions. In addition, these functions can be easily imported from C#.
 
 
 ```csharp
