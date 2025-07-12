@@ -1,5 +1,10 @@
 ### libbase
-This dll contains very handy functions. In addition, these functions can be easily imported from C#.
+This dll contains very handy functions. In addition, these functions can be easily imported from C# and C/C++.
+Singatures initially designed for C#.
+
+## Note
+In case of 'Random' functions, if you use numbers that are close to it's min/max type size, it'll output invalid number.
+
 
 
 ```csharp
@@ -28,4 +33,16 @@ public static unsafe class XLib {
     [DllImport("base.dll")]
     public static extern Single RandomSingle(Single min, Single max);
 }
+```
+
+
+```cpp
+extern "C" __declspec(dllimport) int64_t FastZeroMemory(void* ptr, size_t size);
+extern "C" __declspec(dllimport) int64_t RandomInt64(int64_t min, int64_t max);
+extern "C" __declspec(dllimport) int64_t RandomInt32(int32_t min, int32_t max);
+extern "C" __declspec(dllimport) int64_t RandomInt16(int16_t min, int16_t max);
+extern "C" __declspec(dllimport) int8_t RandomSByte(int8_t min, int8_t max);
+extern "C" __declspec(dllimport) uint8_t RandomByte(uint8_t min, uint8_t max);
+extern "C" __declspec(dllimport) double RandomDouble(double min, double max);
+extern "C" __declspec(dllimport) float RandomSingle(float min, float max);
 ```
