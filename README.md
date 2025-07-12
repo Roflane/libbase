@@ -6,7 +6,7 @@ Singatures initially designed for C#.
 In case of 'Random' functions, if you use numbers that are close to it's min/max type size, it'll output invalid number.
 
 
-
+## C#
 ```csharp
 public static unsafe class XLib {
     [DllImport("base.dll")]
@@ -35,7 +35,7 @@ public static unsafe class XLib {
 }
 ```
 
-
+## C/C++
 ```cpp
 extern "C" __declspec(dllimport) int64_t FastZeroMemory(void* ptr, size_t size);
 extern "C" __declspec(dllimport) int64_t RandomInt64(int64_t min, int64_t max);
