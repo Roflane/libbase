@@ -5,7 +5,6 @@ Singatures initially designed for C#.
 ## Note
 In case of 'Random' functions, if you use numbers that are close to it's min/max type size, it'll output invalid number.
 
-
 ## C#
 ```csharp
 public static unsafe class XLib {
