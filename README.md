@@ -37,7 +37,7 @@ public static unsafe class XLib {
 
 ## C/C++
 ```cpp
-extern "C" __declspec(dllimport) int64_t FastZeroMemory(void* ptr, size_t size);
+extern "C" __declspec(dllimport) void FastZeroMemory(void* ptr, size_t size);
 extern "C" __declspec(dllimport) int64_t RandomInt64(int64_t min, int64_t max);
 extern "C" __declspec(dllimport) int64_t RandomInt32(int32_t min, int32_t max);
 extern "C" __declspec(dllimport) int64_t RandomInt16(int16_t min, int16_t max);
