@@ -1,12 +1,21 @@
 format PE64 DLL
-include 'win64a.inc'
+include 'win64ax.inc'
 
 section '.edata' export readable
 export 'base.dll', \
-    FastZeroMemory, 'FastZeroMemory', RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16', RandomByte, 'RandomByte', RandomSByte, 'RandomSByte'
+    FastZeroMemory, 'FastZeroMemory', \
+    RdSeed64, 'RdSeed64', RdSeed32, 'RdSeed32', RdSeed16, 'RdSeed16', \
+    RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16', RandomByte, 'RandomByte', RandomSByte, 'RandomSByte', \
+    RandomDouble, 'RandomDouble', RandomSingle, 'RandomSingle', \
+    FastSort, 'FastSort'
 
+section '.data' data readable
+    one64 dq 1.0
+    one32 dd 1.0
+    _x64value dq 1.8446744073709552e30
+    _x32value dd 1000000000
 
-section '.code' code readable executable
+section '.text' code readable executable
 proc FastZeroMemory
     xor cl, cl
     mov rdi, rcx
@@ -15,8 +24,20 @@ proc FastZeroMemory
     ret
 endp
 
-macro negr rg { neg rg }
+proc RdSeed64
+    rdrand rax
+    ret
+endp
 
+proc RdSeed32
+    rdrand eax
+    ret
+endp
+
+proc RdSeed16
+    rdrand ax
+    ret
+endp
 
 proc RandomInt64
     cmp rdx, rcx
@@ -63,7 +84,7 @@ proc RandomInt16
     rdrand ax
     test ax, ax
     jns .pos
-    negr ax
+    neg ax
 .pos:
     mov bx, dx
     sub bx, cx
@@ -111,6 +132,92 @@ proc RandomSByte
     ret
 endp
 
-proc RandomFloat
-
+proc RandomDouble
+.begin:
+    rdrand r15
+    test r15, r15
+    cmp r15, 0
+    js .negate
+    jmp .impl
+.negate:
+    neg r15
+.impl:
+    cvtsi2sd xmm2, r15
+    cvtsi2sd xmm3, [_x64value]
+    divsd xmm2, xmm3
+    movq rax, xmm2
+    test rax, rax
+    cmp rax, [one64]
+    jge .begin
+    movsd xmm7, xmm0
+    movsd xmm6, xmm1
+    subsd xmm6, xmm7
+    mulsd xmm2, xmm6
+    addsd xmm2, xmm7
+    movsd xmm0, xmm2
+    ret
 endp
+
+proc RandomSingle
+.begin:
+    rdrand esi
+    test esi, esi
+    cmp esi, 0
+    js .negate
+    jmp .impl
+.negate:
+    neg esi
+.impl:
+    cvtsi2ss xmm2, esi
+    cvtsi2ss xmm3, [_x32value]
+    divss xmm2, xmm3
+    movd eax, xmm2
+    test eax, eax
+    cmp eax, [one32]
+    jge .begin
+    movss xmm7, xmm0
+    movss xmm6, xmm1
+    subss xmm6, xmm7
+    mulss xmm2, xmm6
+    addss xmm2, xmm7
+    movss xmm0, xmm2
+    ret
+endp
+
+FastSort:
+    push rbx
+    push rsi
+    push rdi
+    mov r15, rcx
+    mov r14, rdx
+    xor rbx, rbx
+.outer_loop:
+    mov rsi, r14
+    dec rsi
+    cmp rbx, rsi
+    jge .done
+    xor rdi, rdi
+.inner_loop:
+    mov rax, r14
+    sub rax, rbx
+    sub rax, 1
+    cmp rdi, rax
+    jge .next_i
+    mov rcx, [r15 + rdi*8]
+    mov rax, [r15 + rdi*8 + 8]
+    cmp rax, rcx
+    jge .no_swap
+    mov rax, [r15 + rdi*8 + 8]
+    xchg rax, [r15 + rdi*8]
+    mov [r15 + rdi*8 + 8], rax
+.no_swap:
+    inc rdi
+    jmp .inner_loop
+.next_i:
+    inc rbx
+    jmp .outer_loop
+.done:
+    pop rdi
+    pop rsi
+    pop rbx
+    ret
