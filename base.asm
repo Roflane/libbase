@@ -3,11 +3,10 @@ include 'win64ax.inc'
 
 section '.edata' export readable
 export 'base.dll', \
-    FastZeroMemory, 'FastZeroMemory', \
+    FastZeroMemory, 'FastZeroMemory', FastSort, 'FastSort', \
     RdSeed64, 'RdSeed64', RdSeed32, 'RdSeed32', RdSeed16, 'RdSeed16', \
     RandomInt64, 'RandomInt64', RandomInt32, 'RandomInt32', RandomInt16, 'RandomInt16', RandomByte, 'RandomByte', RandomSByte, 'RandomSByte', \
-    RandomDouble, 'RandomDouble', RandomSingle, 'RandomSingle', \
-    FastSort, 'FastSort'
+    RandomDouble, 'RandomDouble', RandomSingle, 'RandomSingle'
 
 section '.data' data readable
     one64 dq 1.0
