@@ -3,7 +3,11 @@ This dll contains very handy functions made for Windows X64 systems. In addition
 Singatures initially designed for C#.
 
 ## Usage
+#### C#
 Paste code above into your .cs file, and move .dll to build directory.
+
+#### C++
+Paste code into some header file, and link this dll accordingly to your compiler.
 
 ## Note
 In case of 'Random' functions, if you use numbers that are close to it's min/max type size, it'll output invalid number.
@@ -12,7 +16,10 @@ In case of 'Random' functions, if you use numbers that are close to it's min/max
 ```csharp
 public static unsafe class XLib {
     [DllImport("base.dll")]
-    public static extern void FastZeroMemory(void* ptr, Int64 size);
+    public static extern void FastZeroMemory(void *ptr, Int64 size);
+
+    [DllImport("base.dll")]
+    public static extern void FastSort(void *dest, Int64 size);
 
     [DllImport("base.dll")]
     public static extern UInt64 Random64();
@@ -48,7 +55,8 @@ public static unsafe class XLib {
 
 ## C/C++
 ```cpp
-extern "C" __declspec(dllimport) void FastZeroMemory(void* ptr, size_t size);
+extern "C" __declspec(dllimport) void FastZeroMemory(void *ptr, size_t size);
+extern "C" __declspec(dllimport) void FastSort(void *ptr, size_t size);
 extern "C" __declspec(dllimport) uint64_t Random64();
 extern "C" __declspec(dllimport) uint32_t Random32();
 extern "C" __declspec(dllimport) uint16_t Random16();
