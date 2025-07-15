@@ -2,6 +2,9 @@
 This dll contains very handy functions made for Windows X64 systems. In addition, these functions can be easily imported from C# and C/C++.
 Singatures initially designed for C#.
 
+## Usage
+Paste code above into your .cs file, and move .dll to build directory.
+
 ## Note
 In case of 'Random' functions, if you use numbers that are close to it's min/max type size, it'll output invalid number.
 
@@ -12,13 +15,13 @@ public static unsafe class XLib {
     public static extern void FastZeroMemory(void* ptr, Int64 size);
 
     [DllImport("base.dll")]
-    public static extern UInt64 RdSeed64();
+    public static extern UInt64 Random64();
 
     [DllImport("base.dll")]
-    public static extern UInt32 RdSeed32();
+    public static extern UInt32 Random32();
 
     [DllImport("base.dll")]
-    public static extern UInt16 RdSeed16();
+    public static extern UInt16 Random16();
     
     [DllImport("base.dll")]
     public static extern Int64 RandomInt64(Int64 min, Int64 max);
@@ -46,9 +49,9 @@ public static unsafe class XLib {
 ## C/C++
 ```cpp
 extern "C" __declspec(dllimport) void FastZeroMemory(void* ptr, size_t size);
-extern "C" __declspec(dllimport) int64_t RdSeed64();
-extern "C" __declspec(dllimport) int32_t RdSeed32();
-extern "C" __declspec(dllimport) int16_t RdSeed16();
+extern "C" __declspec(dllimport) uint64_t Random64();
+extern "C" __declspec(dllimport) uint32_t Random32();
+extern "C" __declspec(dllimport) uint16_t Random16();
 extern "C" __declspec(dllimport) int64_t RandomInt64(int64_t min, int64_t max);
 extern "C" __declspec(dllimport) int32_t RandomInt32(int32_t min, int32_t max);
 extern "C" __declspec(dllimport) int16_t RandomInt16(int16_t min, int16_t max);
