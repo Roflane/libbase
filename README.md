@@ -19,7 +19,7 @@ public static unsafe class XLib {
     public static extern void FastZeroMemory(void *ptr, Int64 size);
 
     [DllImport("base.dll")]
-    public static extern void FastSort(void *dest, Int64 size);
+    public static extern void FastSort(void *ptr, Int64 size);
 
     [DllImport("base.dll")]
     public static extern UInt64 Random64();
