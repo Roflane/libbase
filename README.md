@@ -7,7 +7,7 @@ Singatures initially designed for C#.
 Paste code above into your .cs file, and move .dll to build directory.
 
 #### C++
-Paste code into some header file, and link this dll accordingly to your compiler.
+Paste code into some header file, and link this dll accordingly to your compiler. (gcc/clang recommended)
 
 ## Note
 In case of 'Random' functions, if you use numbers that are close to it's min/max type size, it'll output invalid number.
