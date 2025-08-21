@@ -184,39 +184,23 @@ proc RandomSingle
 endp
 
 FastSort:
-    push rbx
-    push rsi
-    push rdi
-    mov r15, rcx
-    mov r14, rdx
-    xor rbx, rbx
-.outer_loop:
-    mov rsi, r14
-    dec rsi
-    cmp rbx, rsi
-    jge .done
-    xor rdi, rdi
-.inner_loop:
-    mov rax, r14
-    sub rax, rbx
-    sub rax, 1
-    cmp rdi, rax
-    jge .next_i
-    mov rcx, [r15 + rdi*8]
-    mov rax, [r15 + rdi*8 + 8]
-    cmp rax, rcx
-    jge .no_swap
-    mov rax, [r15 + rdi*8 + 8]
-    xchg rax, [r15 + rdi*8]
-    mov [r15 + rdi*8 + 8], rax
+    cmp rdx, 1
+    jbe .ret
+    lea r8, [rdx - 1]
+.outer:
+    xor r9, r9
+.inner:
+    mov  r10, [rcx + r9*8]
+    mov  r11, [rcx + r9*8 + 8]
+    cmp  r11, r10
+    jge  .no_swap
+    mov  [rcx + r9*8],       r11
+    mov  [rcx + r9*8 + 8],   r10
 .no_swap:
-    inc rdi
-    jmp .inner_loop
-.next_i:
-    inc rbx
-    jmp .outer_loop
-.done:
-    pop rdi
-    pop rsi
-    pop rbx
-    ret
+    inc  r9
+    cmp  r9, r8
+    jl   .inner
+    dec  r8
+    jg   .outer
+.ret:
+    ret    
